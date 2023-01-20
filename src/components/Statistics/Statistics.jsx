@@ -1,45 +1,47 @@
-import css from './Ststistics.module.css';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
-const createColor = () => {
-    const color =
-        'rgba(' +
-        Math.round(Math.random() * 255) +
-        ',' +
-        Math.round(Math.random() * 255) +
-        ',' +
-        Math.round(Math.random() * 255) +
-        ',' +
-        0.5 +
-        ')';
+import styles from './Statistics.module.css';
 
-    return color;
-};
+export const Statistics = ({ title = '', stats }) => {
+    function randomColor() {
+        return `rgb(
+    ${Math.floor(Math.random() * 256)},
+    ${Math.floor(Math.random() * 256)}, 
+    ${Math.floor(Math.random() * 256)})
+    `;
+    }
 
-export const Statistics = ({ title, stats }) => {
     return (
-        <section className={css.statistics}>
-            {title && <h2 className={css.title}>{title}</h2>}
+        <section className={styles.statistics}>
+            {title && <h2 className={styles.title}>{title}</h2>}
 
-            <ul className={css.stats__list}>
-                {stats.map(({ id, label, percentage }) => {
-                    return (
-                        <li
-                            className={css.stats}
-                            key={id}
-                            style={{ backgroundColor: createColor() }}
-                        >
-                            <span className={css.label}>{label}</span>
-                            <span className={css.percentage}>{percentage}</span>
-                        </li>
-                    );
-                })}
+            <ul className={styles.statList}>
+                {stats.map(item => (
+                    <li
+                        className={styles.item}
+                        key={item.id}
+                        style={{ backgroundColor: randomColor() }}
+                    >
+                        <span className={styles.label}>{item.label}</span>
+                        <span className={styles.percentage}>{item.percentage}%</span>
+                    </li>
+                ))}
             </ul>
         </section>
     );
 };
 
+Statistics.defaultProps = {
+    title: '',
+};
+
 Statistics.propTypes = {
-    label: propTypes.string.isRequired,
-    percentage: propTypes.number.isRequired,
+    title: PropTypes.string,
+    stats: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            label: PropTypes.string.isRequired,
+            percentage: PropTypes.number.isRequired,
+        }).isRequired,
+    ).isRequired,
 };
